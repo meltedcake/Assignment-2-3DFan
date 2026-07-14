@@ -1,0 +1,20 @@
+# build output -- never commit (core2)
+build/
+build_desktop/
+web/
+external/
+_deps/
+
+# android generated
+.gradle/
+.idea/
+android/app/build/
+android/app/.cxx/
+android/.gradle/
+android/.idea/
+android/build/
+android/local.properties
+
+# misc
+*.log
+.DS_Store
