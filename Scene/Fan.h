@@ -47,11 +47,15 @@ private:
     float spinAngle = 0.0f;       // current blade angle (degrees)
     bool  fanOn     = true;       // toggled by a tap
     float dragBoost = 0.0f;       // extra speed while dragging, 0 otherwise
+    bool  dragging  = false;      // finger/button currently down
+
  
     static constexpr float kBaseSpeed    = 1.5f;   // deg/frame when ON
     static constexpr float kMaxBoost     = 20.0f;  // clamp for the drag boost
     static constexpr float kBoostScale   = 8.0f;   // px/ms -> deg/frame
     static constexpr float kTapThreshold = 12.0f;  // px: below this it's a tap
+    static constexpr float kFlingDecay   = 0.98f;  // per-frame wind-down after release
+
  
     float lastX = 0.0f, lastY = 0.0f;  // previous touch position
     float movedDistance = 0.0f;        // total movement since touch-down

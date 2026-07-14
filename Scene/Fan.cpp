@@ -132,6 +132,12 @@ void Fan::Render() {
     // part 2 -- advance the rotation
     if (fanOn) spinAngle += kBaseSpeed + dragBoost;
     if (spinAngle >= 360.0f) spinAngle -= 360.0f;
+
+    // stretch: after release the boost decays each frame (fling wind-down)
+    if (!dragging && dragBoost > 0.0f) {
+        dragBoost *= kFlingDecay;
+        if (dragBoost < 0.01f) dragBoost = 0.0f;
+    }
  
     glUseProgram(program);
     glBindVertexArray(vao);
@@ -186,6 +192,7 @@ void Fan::drawPart(const glm::vec3& colour) {
 }
  
 void Fan::TouchEventDown(float x, float y) {
+    dragging = true;
     lastX = x;
     lastY = y;
     movedDistance = 0.0f;
@@ -213,12 +220,13 @@ void Fan::TouchEventMove(float x, float y) {
 }
  
 void Fan::TouchEventRelease(float /*x*/, float /*y*/) {
+    dragging = false;
+
     // little movement between down and release -> it was a tap
     if (movedDistance < kTapThreshold) {
         fanOn = !fanOn;
+        dragBoost = 0.0f;   // a tap carries no fling
         LOGI("Fan %s", fanOn ? "ON" : "OFF");
     }
- 
-    // the boost applies only while dragging
-    dragBoost = 0.0f;
+    // a swipe keeps its boost -- Render() decays it (stretch goal)
 }
